@@ -1,6 +1,6 @@
 #include <vector>
 
-#define INTSIZE 32
+#define INTSIZE CHAR_BIT * sizeof(int)
 
 
 class MyBoolVector

@@ -5,9 +5,6 @@
 #include <fstream>
 #include "MyBoolVector.h"
 
-#define INTSIZE 32
-#define MININT -2147483648
-
 typedef int mybool;
 
 using namespace std;
