@@ -1,74 +1,12 @@
-// crossflip2.cpp : main project file.
-
 #include <vector>
 #include <iostream>
 #include <fstream>
-#include "MyBoolVector.h"
+#include "BoolVector.h"
 
 typedef int mybool;
 
 using namespace std;
 
-
-void rowReduceInZ_2( std::vector< MyBoolVector > &matrix )
-{
-    const int m = matrix.size();
-    const int n = matrix[0].size();
-
-    int nPivotRow = 0;
-
-    //Front-Solving
-    for ( int j = 0; j < n-1; j++ ) //n-1 because we assume the last column is the "objective" vector
-    {
-        //Find pivot
-        int nPivot = nPivotRow;
-        while (nPivot < m)
-        {
-            if ( matrix[nPivot][j] )
-                break;
-            nPivot++;
-        }
-
-		if (nPivot < m) //If we found a pivot row
-		{
-			if (nPivot != nPivotRow) //And it's not the main row
-				matrix[nPivotRow].mySwap(matrix[nPivot]); //Swap with main row
-		}
-        else
-            continue; //this column is clear, go to next column
-
-        //Kill all non zero in the column except for pivot.
-		for ( int i = nPivot+1; i < m; i++ )
-            if ( matrix[i][j] )
-                matrix[i].myXOR(matrix[nPivotRow], j);
-        
-        nPivotRow++;
-    }
-
-    //Back-Solving
-	for ( int j = n-2; j > 0; j-- )
-    {
-        //Find first non-zero entry from the bottom
-		int nPivot = j;
-		while ( nPivot > -1 && !matrix[nPivot][j] )
-			nPivot--;
-
-    	//The whole column is 0, try again with next column
-		if (nPivot == -1)
-			continue;
-
-        //Move to the left until it is the pivot
-        //while ( matrix[nPivot][j-1] && (j > 0) )
-        //    j--;
-        //if (j == 0)
-        //    break;
-
-		//Kill all non-zero above
-		for ( int i = nPivot-1; i > -1; i-- )
-			if ( matrix[i][j] )
-				matrix[i].myXOR(matrix[nPivot]);
-    }
-}
 
 int main(int argc, char* argv[])
 {
@@ -110,10 +48,10 @@ int main(int argc, char* argv[])
 	const int m = vvcArena.size();
 	const int n = vvcArena[0].size();
 	const int N = vbRHS.size(); //== m*n
-	std::vector< MyBoolVector > vvbMain;
+	std::vector< BoolVector > vvbMain;
 	for (int i = 0; i < N; i++)
 	{
-		MyBoolVector temp(N+1);
+		BoolVector temp(N+1);
 		if (vbRHS[i])
             temp.flipON(N);
 		vvbMain.push_back(temp);
